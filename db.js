@@ -1,5 +1,6 @@
 let MongoClient = require('mongodb').MongoClient;
-let {dbName} = require('./settings')
+
+const dbName = 'short_links_server';
 
 let state = {
   db: null

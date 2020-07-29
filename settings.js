@@ -1,1 +1,0 @@
-exports.dbName = 'short_links_server'
