@@ -1,7 +1,7 @@
 const bcrypt = require("bcrypt");
 const saltRounds = 10;
 
-async function genHash(password, existingSalt) {
+exports.genHash = async function (password, existingSalt) {
   return (existingSalt ? Promise.resolve(existingSalt)
                        : bcrypt.genSalt(saltRounds))
     .then(salt => {
