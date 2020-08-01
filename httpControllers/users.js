@@ -1,7 +1,7 @@
 let userDb = require("../models/users")
 
 exports.addUser = function (req, res) {
-  userDb.add(req.body.user, req.body.password)
+  return userDb.add(req.body.user, req.body.password)
     .then(([doc, msg]) => {
       res.send(msg);
     }).catch(([doc, msg]) => {
@@ -10,7 +10,7 @@ exports.addUser = function (req, res) {
 }
 
 exports.deleteUser = function (req, res) {
-  userDb.deleteByUser(req.body.user)
+  return userDb.deleteByUser(req.body.user)
     .then(([n, doc, msg]) => {
       res.send(msg);
     }).catch(([n, doc, msg]) => {
@@ -19,8 +19,7 @@ exports.deleteUser = function (req, res) {
 }
 
 exports.getUser = function (req, res) {
-  console.log("Req.user", req.user);
-  userDb.findByUser(req.user.user)
+  return userDb.findByUser(req.body.user)
     .then(([doc, msg]) => {
       res.send(doc);
     }).catch(([doc, msg]) => {

@@ -22,7 +22,7 @@ exports.deleteByLinkId = async function (req, res) {
 }
 
 exports.getAllByUser = async function (req, res) {
-  return shortLinksDb.getAllByUser(req.body.userId)
+  return shortLinksDb.getAllByUser(req.body.user)
     .then(doc => {
       res.send(doc);
     }).catch(err => {

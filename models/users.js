@@ -9,7 +9,7 @@ exports.findByUser = async function(user) {
     console.log("Found doc:", doc);
     return [doc, "User found"];
   } else {
-    console.log("User", user, "not found");
+    console.log("User", user, "not found 3");
     throw [doc, "User not found"];
   }
 }

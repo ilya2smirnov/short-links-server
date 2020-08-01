@@ -9,7 +9,7 @@ exports.useLocalPassword = function (app, urlList) {
       passwordField: 'password'
     },
     function (username, password, done) {
-      userModel.verifyUser(username, password)
+      return userModel.verifyUser(username, password)
         .then(result => {
           console.log("Verified", result[0]);
           return done(null, result[0], {message: result[1]});
