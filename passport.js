@@ -10,11 +10,10 @@ exports.useLocalPassword = function (app, urlList) {
     },
     function (username, password, done) {
       return userModel.verifyUser(username, password)
-        .then(result => {
-          console.log("Verified", result[0]);
-          return done(null, result[0], {message: result[1]});
+        .then(doc => {
+          return done(null, doc);
         }).catch(error => {
-          return done(null, false, {message: error[1]})
+          return done(null, false)
         })
     }
   ));

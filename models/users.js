@@ -21,27 +21,24 @@ exports.findByUser = async function(user) {
 }
 
 exports.verifyUser = async function(user, password) {
-  let doc, msg;
+  let doc;
   try {
     doc = await exports.findByUser(user);
   } catch (err) {
-    console.log("User", user, "doesn't exist");
-    throw [null, "User '" + user + "' doesn't exist"];
+    throw err;
   }
   if (doc) {
     let hashObj = await crypt.genHash(password, doc.salt);
-    console.log("result_hash:", hashObj.hash);
-    console.log("db_hash:", doc.hash);
     if (hashObj.hash === doc.hash) {
-      console.log("User:", user, "verified");
-      return [doc, "User verified"];
+      console.log("User", user, "is authenticated");
+      return doc;
     } else {
-      console.log("User:", user, "isn't verified");
-      throw [doc, "Incorrect password"];
+      console.log("User:", user, "is not authenticated");
+      throw "Incorrect password";
     }
   }
-  console.log("User:", user, "isn't verified");
-  throw [null, "Username not found"];
+  console.log("User:", user, "is not authenticated");
+  throw "Username not found";
 }
 
 exports.add = async function(user, password) {
