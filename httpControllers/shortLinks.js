@@ -1,4 +1,3 @@
-let usersDb = require("../models/users");
 let shortLinksDb = require("../models/shortLinks");
 
 
