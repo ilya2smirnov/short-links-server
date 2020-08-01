@@ -17,8 +17,8 @@ app.use(passport.initialize());
 
 auth.useLocalPassword(app);
 
-app.post('/api/user', authController.addUser);
-app.delete('/api/user', authController.deleteUser);
+app.post('/api/user/add', authController.addUser);
+app.post('/api/user/delete', authController.deleteUser);
 
 db.connect('mongodb://localhost:27017')
   .then(() => {
