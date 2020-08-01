@@ -5,7 +5,7 @@ let ObjectID = require('mongodb').ObjectID;
 const collectionName = "shortLinks";
 
 exports.add = async function (username, fullLink, shortLink) {
-  let [doc, msg] = await userModel.findByUser(username);
+  let doc = await userModel.findByUser(username);
   if (!doc) {
     throw `User '${username}' not found 1`;
   }
@@ -52,7 +52,7 @@ exports.deleteByLinkId = async function (id) {
 }
 
 exports.getAllByUser = async function (username) {
-  let [doc, msg] = await userModel.findByUser(username);
+  let doc = await userModel.findByUser(username);
   if (!doc) {
     throw `User '${username}' not found 2`;
   }

@@ -4,20 +4,26 @@ let crypt = require("../crypt");
 const collectionName = "user";
 
 exports.findByUser = async function(user) {
-  let doc = await db.get().collection(collectionName).findOne({ user });
+  let doc;
+  try {
+    doc = await db.get().collection(collectionName).findOne({user});
+  } catch (err) {
+    console.log("DB error:", err);
+    throw "Internal error";
+  }
   if (doc) {
-    console.log("Found doc:", doc);
-    return [doc, "User found"];
+    console.log("User found:", doc);
+    return doc;
   } else {
-    console.log("User", user, "not found 3");
-    throw [doc, "User not found"];
+    console.log("User", user, "not found");
+    throw "User " + user + " found";
   }
 }
 
 exports.verifyUser = async function(user, password) {
   let doc, msg;
   try {
-    [doc, msg] = await exports.findByUser(user);
+    doc = await exports.findByUser(user);
   } catch (err) {
     console.log("User", user, "doesn't exist");
     throw [null, "User '" + user + "' doesn't exist"];
@@ -41,7 +47,7 @@ exports.verifyUser = async function(user, password) {
 exports.add = async function(user, password) {
   let doc, msg;
   try {
-    [doc, msg] = await exports.findByUser(user);
+    doc = await exports.findByUser(user);
   } catch (err) {
 
   }
@@ -59,12 +65,12 @@ exports.add = async function(user, password) {
 exports.deleteByUser = async function(user) {
   let doc, msg;
   try {
-    [doc, msg] = await exports.findByUser(user);
+    doc = await exports.findByUser(user);
   } catch (err) {
     console.log("User", user, "doesn't exist");
     throw [0, null, "User '" + user + "' doesn't exist"];
   }
-  console.log(doc, msg);
+  console.log(doc);
   let result = await db.get().collection(collectionName).deleteOne({user});
   if (result.result.n === 1 && result.result.ok === 1) {
     console.log("Deleted record:", doc);
