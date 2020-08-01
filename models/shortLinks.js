@@ -1,5 +1,5 @@
 let db = require("../db");
-let userModel = require("./user")
+let userModel = require("./users")
 
 const collectionName = "shortLinks";
 

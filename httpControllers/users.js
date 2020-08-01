@@ -1,4 +1,4 @@
-let userDb = require("../models/user")
+let userDb = require("../models/users")
 
 exports.addUser = function (req, res) {
   userDb.add(req.body.user, req.body.password)

@@ -2,8 +2,8 @@ let express = require('express');
 let bodyParser = require('body-parser')
 let passport = require('passport')
 let db = require('./db')
-let authController = require('./controllers/authController')
-let auth = require('./auth')
+let authController = require('./httpControllers/users')
+let auth = require('./passport')
 
 app = express();
 
@@ -15,7 +15,8 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(passport.initialize());
 
-let authUrlList = ['/api/user/delete', '/api/user/get'];
+let authUrlList = ['/api/user/delete'
+  , '/api/user/get'];
 let nonAuthUrlList = ['/api/user/add'];
 auth.useLocalPassword(app, authUrlList);
 
