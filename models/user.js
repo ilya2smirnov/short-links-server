@@ -13,7 +13,7 @@ exports.findByUser = async function(user) {
   return doc;
 }
 
-exports.verityUser = async function(user, password) {
+exports.verifyUser = async function(user, password) {
   let doc = await db.get().collection(collectionName).findOne({ user });
   if (doc) {
     let hashObj = crypt.genHash(doc.password, doc.salt);
@@ -29,7 +29,7 @@ exports.verityUser = async function(user, password) {
 exports.add = async function(user, password) {
   let doc = await exports.findByUser(user);
   if (doc) {
-    throw {"User already exists: ": doc};
+    throw "User already exists";
   }
   const hashObj = await crypt.genHash(password);
   const userObj = { user, ...hashObj };

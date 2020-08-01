@@ -4,7 +4,7 @@ let userModel = require('./models/user')
 
 passport.use(new LocalStrategy(
   function(username, password, done) {
-    let doc = userModel.verityUser(username, password);
+    let doc = userModel.verifyUser(username, password);
     if (doc) {
       return done(null, doc);
     }
