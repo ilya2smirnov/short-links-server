@@ -14,6 +14,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 app.post('/user', authController.addUser);
 app.delete('/user', authController.deleteUser);
+app.post('/user/get', authController.getUser);
 
 db.connect('mongodb://localhost:27017')
   .then(() => {

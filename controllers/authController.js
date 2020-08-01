@@ -18,4 +18,13 @@ exports.deleteUser = function (req, res) {
     });
 }
 
+exports.getUser = function (req, res) {
+  userDb.findByUser(req.body.user)
+    .then(([doc, msg]) => {
+      res.send(doc);
+    }).catch(([doc, msg]) => {
+      res.send(doc || {});
+    });
+}
+
 
