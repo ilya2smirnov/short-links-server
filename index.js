@@ -15,10 +15,13 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(passport.initialize());
 
-auth.useLocalPassword(app);
+let authUrlList = ['/api/user/delete', '/api/user/get'];
+let nonAuthUrlList = ['/api/user/add'];
+auth.useLocalPassword(app, authUrlList);
 
-app.post('/api/user/add', authController.addUser);
-app.post('/api/user/delete', authController.deleteUser);
+app.post(nonAuthUrlList[0], authController.addUser);
+app.post(authUrlList[0], authController.deleteUser);
+app.post(authUrlList[1], authController.getUser);
 
 db.connect('mongodb://localhost:27017')
   .then(() => {
