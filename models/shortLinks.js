@@ -9,13 +9,12 @@ exports.add = async function (username, fullLink, shortLink) {
   if (!doc) {
     throw `User '${username}' not found 1`;
   }
-  console.log("User id <- doc:", doc);
+  console.log("Inserted link:", doc);
   let objToInsert = {
     userId: doc._id,
     fullLink,
     shortLink
   }
-  console.log("Inserted user id:", objToInsert.userId);
   return db.get().collection(collectionName).insertOne(objToInsert)
     .then(doc => {
       if (doc.insertedCount) {
