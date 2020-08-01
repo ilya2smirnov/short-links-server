@@ -9,10 +9,6 @@ exports.useLocalPassword = function () {
       passwordField: 'password'
     },
     function (username, password, done) {
-      // if (password === "ilya1_pass")
-      //   return done(null, "ok");
-      // else
-      //   return done(null, false);
       userModel.verifyUser(username, password)
         .then(result => {
           console.log("Verified", result[0]);
