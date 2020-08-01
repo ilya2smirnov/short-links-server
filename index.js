@@ -1,7 +1,9 @@
 let express = require('express');
 let bodyParser = require('body-parser')
+let passport = require('passport')
 let db = require('./db')
 let authController = require('./controllers/authController')
+let auth = require('./auth')
 
 app = express();
 
@@ -11,10 +13,23 @@ app.get('/', function (req, res) {
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(passport.initialize());
+
+auth.useLocalPassword();
+
+app.post('/user/get',
+  passport.authenticate('local',
+    {session: false, failureRedirect: '/user/get/fail'}),
+    function(req, res) {
+      authController.getUser(req, res)
+});
+
+app.get('/user/get/fail', (req, res) => {
+  res.send("User not found or password is incorrect");
+});
 
 app.post('/user', authController.addUser);
 app.delete('/user', authController.deleteUser);
-app.post('/user/get', authController.getUser);
 
 db.connect('mongodb://localhost:27017')
   .then(() => {

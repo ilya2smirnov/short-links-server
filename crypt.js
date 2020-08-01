@@ -5,6 +5,7 @@ exports.genHash = async function (password, existingSalt) {
   return (existingSalt ? Promise.resolve(existingSalt)
                        : bcrypt.genSalt(saltRounds))
     .then(salt => {
+      console.log("getHash:", password, salt);
       return bcrypt.hash(password, salt).then((hash) => {
         return {hash, salt};
       }).catch(err => {

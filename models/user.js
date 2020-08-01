@@ -23,12 +23,14 @@ exports.verifyUser = async function(user, password) {
     throw [null, "User '" + user + "' doesn't exist"];
   }
   if (doc) {
-    let hashObj = crypt.genHash(doc.password, doc.salt);
+    let hashObj = await crypt.genHash(password, doc.salt);
+    console.log("result_hash:", hashObj.hash);
+    console.log("db_hash:", doc.hash);
     if (hashObj.hash === doc.hash) {
       console.log("User:", user, "verified");
       return [doc, "User verified"];
     } else {
-      console.log("User:", user, "verified");
+      console.log("User:", user, "isn't verified");
       throw [doc, "Incorrect password"];
     }
   }

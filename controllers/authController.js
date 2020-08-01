@@ -19,7 +19,8 @@ exports.deleteUser = function (req, res) {
 }
 
 exports.getUser = function (req, res) {
-  userDb.findByUser(req.body.user)
+  console.log("Req.user", req.user);
+  userDb.findByUser(req.user.user)
     .then(([doc, msg]) => {
       res.send(doc);
     }).catch(([doc, msg]) => {
