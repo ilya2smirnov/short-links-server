@@ -6,7 +6,7 @@ const collectionName = "shortLinks";
 exports.add = async function (username, fullLink, shortLink) {
   let doc = userModel.findByUser(username);
   if (!doc) {
-    throw [`User '${username}' not found`];
+    throw `User '${username}' not found`;
   }
   let objToInsert = {
     userId: doc._id,
@@ -33,10 +33,15 @@ exports.deleteByLinkId = async function (id) {
     }
   }, err => {
     console.log("DB internal error:", err)
-    return "DB internal error";
+    throw "DB internal error";
   })
 }
 
-exports.getAllByUserId = async function (userId) {
-  return db.get().collection(collectionName).find({ userId }).toArray()
+exports.getAllByUser = async function (username) {
+  let doc = userModel.findByUser(username);
+  if (!doc) {
+    throw `User '${username}' not found`;
+  }
+  return db.get().collection(collectionName).find({ userId: doc._id })
+    .toArray()
 }
