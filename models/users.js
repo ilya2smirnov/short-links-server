@@ -42,39 +42,42 @@ exports.verifyUser = async function(user, password) {
 }
 
 exports.add = async function(user, password) {
-  let doc, msg;
+  let doc;
   try {
     doc = await exports.findByUser(user);
-  } catch (err) {
-
-  }
+  } catch (err) { }
   if (doc) {
-    console.log("User:", user, "already exists");
-    throw [doc, "User already exists"];
+    console.log("User", user, "already exists");
+    throw "User " + user + " exists";
   }
   const hashObj = await crypt.genHash(password);
   const userObj = { user, ...hashObj };
-  await db.get().collection(collectionName).insertOne(userObj);
-  console.log("Add user:", userObj);
-  return [userObj, "User added"];
+  try {
+    await db.get().collection(collectionName).insertOne(userObj);
+  } catch (err) {
+    console.log("DB internal error", err);
+    throw "Internal error";
+  }
+  console.log("Added user:", userObj);
+  return "User added";
 }
 
 exports.deleteByUser = async function(user) {
-  let doc, msg;
+  let doc;
   try {
     doc = await exports.findByUser(user);
   } catch (err) {
     console.log("User", user, "doesn't exist");
-    throw [0, null, "User '" + user + "' doesn't exist"];
+    throw "User '" + user + "' doesn't exist";
   }
   console.log(doc);
   let result = await db.get().collection(collectionName).deleteOne({user});
   if (result.result.n === 1 && result.result.ok === 1) {
-    console.log("Deleted record:", doc);
-    return [result.result.n, doc, "Record deleted"];
+    console.log("User deleted:", doc);
+    return "User deleted";
   } else {
     console.log("Internal error:", result);
-    throw [result.result.n, null, "Internal error"];
+    throw "Internal error";
   }
 }
 
