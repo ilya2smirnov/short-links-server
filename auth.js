@@ -2,7 +2,7 @@ let passport = require('passport')
 let LocalStrategy = require('passport-local').Strategy;
 let userModel = require('./models/user')
 
-exports.useLocalPassword = function () {
+exports.useLocalPassword = function (app) {
   passport.use(new LocalStrategy(
     {
       usernameField: 'user',
@@ -18,4 +18,15 @@ exports.useLocalPassword = function () {
         })
     }
   ));
+
+  app.post('/user/get',
+    passport.authenticate('local',
+      {session: false, failureRedirect: '/user/get/fail', failureFlash: true}),
+    function(req, res) {
+      authController.getUser(req, res);
+    });
+
+  app.get('/user/get/fail', (req, res) => {
+    res.send("User not found or password is incorrect");
+  });
 }

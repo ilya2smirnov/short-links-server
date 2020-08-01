@@ -15,18 +15,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(passport.initialize());
 
-auth.useLocalPassword();
-
-app.post('/user/get',
-  passport.authenticate('local',
-  {session: false, failureRedirect: '/user/get/fail', failureFlash: true}),
-  function(req, res) {
-    authController.getUser(req, res);
-  });
-
-app.get('/user/get/fail', (req, res) => {
-  res.send("User not found or password is incorrect");
-});
+auth.useLocalPassword(app);
 
 app.post('/user', authController.addUser);
 app.delete('/user', authController.deleteUser);
