@@ -1,10 +1,21 @@
+let userDb = require("../models/user")
 
-function registerUser(req, res) {
-
+exports.addUser = function (req, res) {
+  userDb.add(req.body.user, req.body.password)
+    .then(result => {
+      res.send(result);
+    }).catch(error => {
+      res.send(error);
+    })
 }
 
-function unregisterUser(req, res) {
-
+exports.deleteUser = function (req, res) {
+  userDb.deleteByUser(req.body.user)
+    .then(result => {
+      res.send(result.result);
+    }).catch(error => {
+      res.send(error);
+    });
 }
 
 

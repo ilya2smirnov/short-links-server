@@ -17,7 +17,7 @@ exports.connect = async function(url) {
   MongoClient.connect(url, {useNewUrlParser: true, useUnifiedTopology: true})
     .then(client => {
       console.log("Successfully connected to DB");
-      state.db = client(dbName);
+      state.db = client.db(dbName);
     }).catch(err => {
       console.log("Unable to connect to DB:", err);
       throw err;
