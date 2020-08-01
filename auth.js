@@ -12,9 +12,9 @@ exports.useLocalPassword = function () {
       userModel.verifyUser(username, password)
         .then(result => {
           console.log("Verified", result[0]);
-          return done(null, result[0]);
+          return done(null, result[0], {message: result[1]});
         }).catch(error => {
-          return done(null, false, error[1])
+          return done(null, false, {message: error[1]})
         })
     }
   ));

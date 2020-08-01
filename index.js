@@ -19,10 +19,10 @@ auth.useLocalPassword();
 
 app.post('/user/get',
   passport.authenticate('local',
-    {session: false, failureRedirect: '/user/get/fail'}),
-    function(req, res) {
-      authController.getUser(req, res)
-});
+  {session: false, failureRedirect: '/user/get/fail', failureFlash: true}),
+  function(req, res) {
+    authController.getUser(req, res);
+  });
 
 app.get('/user/get/fail', (req, res) => {
   res.send("User not found or password is incorrect");
