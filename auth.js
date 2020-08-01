@@ -2,12 +2,15 @@ let passport = require('passport')
 let LocalStrategy = require('passport-local').Strategy;
 let userModel = require('./models/user')
 
-passport.use(new LocalStrategy(
-  function(username, password, done) {
-    let doc = userModel.verifyUser(username, password);
-    if (doc) {
-      return done(null, doc);
+exports.useLocalPassword = function () {
+  passport.use(new LocalStrategy(
+    function (username, password, done) {
+      userModel.verifyUser(username, password)
+        .then(result => {
+          return done(null, result[0]);
+        }).catch(error => {
+        return done(null, false, error[1])
+      })
     }
-    return done(null, false, "Incorrect credentials");
-  }
-));
+  ));
+}

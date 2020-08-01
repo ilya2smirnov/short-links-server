@@ -15,7 +15,13 @@ exports.findByUser = async function(user) {
 }
 
 exports.verifyUser = async function(user, password) {
-  let doc = await db.get().collection(collectionName).findOne({ user });
+  let doc, msg;
+  try {
+    [doc, msg] = await exports.findByUser(user);
+  } catch (err) {
+    console.log("User", user, "doesn't exist");
+    throw [null, "User '" + user + "' doesn't exist"];
+  }
   if (doc) {
     let hashObj = crypt.genHash(doc.password, doc.salt);
     if (hashObj.hash === doc.hash) {
@@ -31,7 +37,12 @@ exports.verifyUser = async function(user, password) {
 }
 
 exports.add = async function(user, password) {
-  let doc = await exports.findByUser(user);
+  let doc, msg;
+  try {
+    [doc, msg] = await exports.findByUser(user);
+  } catch (err) {
+
+  }
   if (doc) {
     console.log("User:", user, "already exists");
     throw [doc, "User already exists"];
@@ -44,19 +55,21 @@ exports.add = async function(user, password) {
 }
 
 exports.deleteByUser = async function(user) {
-  let doc = await exports.findByUser(user);
-  if (doc) {
-    let result = await db.get().collection(collectionName).deleteOne({user});
-    if (result.result.n === 1 && result.result.ok === 1) {
-      console.log("Deleted record:", doc);
-      return [result.result.n, doc];
-    } else {
-      console.log("Internal error:", result);
-      throw [result.result.n, null, "Internal error"];
-    }
-  } else {
+  let doc, msg;
+  try {
+    [doc, msg] = await exports.findByUser(user);
+  } catch (err) {
     console.log("User", user, "doesn't exist");
-    throw [result.result.n, null, "User '" + user + "' doesn't exist"];
+    throw [0, null, "User '" + user + "' doesn't exist"];
+  }
+  console.log(doc, msg);
+  let result = await db.get().collection(collectionName).deleteOne({user});
+  if (result.result.n === 1 && result.result.ok === 1) {
+    console.log("Deleted record:", doc);
+    return [result.result.n, doc, "Record deleted"];
+  } else {
+    console.log("Internal error:", result);
+    throw [result.result.n, null, "Internal error"];
   }
 }
 

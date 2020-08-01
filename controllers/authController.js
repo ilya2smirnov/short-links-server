@@ -2,19 +2,19 @@ let userDb = require("../models/user")
 
 exports.addUser = function (req, res) {
   userDb.add(req.body.user, req.body.password)
-    .then(result => {
-      res.send(result);
-    }).catch(error => {
-      res.send(error);
+    .then(([doc, msg]) => {
+      res.send(msg);
+    }).catch(([doc, msg]) => {
+      res.send(msg);
     })
 }
 
 exports.deleteUser = function (req, res) {
   userDb.deleteByUser(req.body.user)
-    .then(result => {
-      res.send(result.result);
-    }).catch(error => {
-      res.send(error);
+    .then(([n, doc, msg]) => {
+      res.send(msg);
+    }).catch(([n, doc, msg]) => {
+      res.send(msg);
     });
 }
 
