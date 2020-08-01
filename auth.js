@@ -19,14 +19,14 @@ exports.useLocalPassword = function (app) {
     }
   ));
 
-  app.post('/user/get',
+  app.post('/api/user/get',
     passport.authenticate('local',
-      {session: false, failureRedirect: '/user/get/fail', failureFlash: true}),
+      {session: false, failureRedirect: '/api/user/get/fail', failureFlash: true}),
     function(req, res) {
       authController.getUser(req, res);
     });
 
-  app.get('/user/get/fail', (req, res) => {
+  app.get('/api/user/get/fail', (req, res) => {
     res.send("User not found or password is incorrect");
   });
 }
