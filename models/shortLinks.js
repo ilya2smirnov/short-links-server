@@ -5,57 +5,53 @@ let ObjectID = require('mongodb').ObjectID;
 const collectionName = "shortLinks";
 
 exports.add = async function (username, fullLink, shortLink) {
-  let doc = await userModel.findByUser(username);
-  if (!doc) {
-    throw `User '${username}' not found 1`;
-  }
-  console.log("Inserted link:", doc);
-  let objToInsert = {
-    userId: doc._id,
-    fullLink,
-    shortLink
-  }
-  return db.get().collection(collectionName).insertOne(objToInsert)
+  return userModel.findByUser(username)
     .then(doc => {
-      if (doc.insertedCount) {
-        console.log("Inserted", doc.ops[0]);
-        return doc.ops[0];
-      }
-      else {
-        console.log("DB Internal error", doc);
-        throw "Internal error";
-      }
-    }).catch(err => {
-      console.log("DB Internal error", err);
-      return "DB Internal error";
-    })
+      let objToInsert = {
+        userId: doc._id,
+        fullLink,
+        shortLink
+      };
+      return db.get().collection(collectionName).insertOne(objToInsert)
+        .then(doc => {
+        if (doc.insertedCount) {
+          console.log("Inserted link", doc.ops[0]);
+          return doc.ops[0];
+        }
+        else {
+          console.log("DB Internal error", doc);
+          throw "Internal error";
+        }
+        })
+        .catch(err => {
+          console.log("DB Internal error", err);
+          return "DB Internal error";
+        });
+    });
 }
 
 exports.deleteByLinkId = async function (id) {
   if (!ObjectID.isValid(id)) {
     throw "Link id is not valid: " + id;
   }
-  return db.get().collection(collectionName).findOneAndDelete({
-    _id: ObjectID(id)
-  }).then(doc => {
-    if (doc.value) {
-      console.log("Link deleted:", doc.value)
-      return doc.value;
-    } else {
-      console.log("Link not found")
-      throw "Link not found";
-    }
-  }, err => {
-    console.log("DB internal error:", err)
-    throw "DB internal error";
-  })
+  return db.get().collection(collectionName).findOneAndDelete({ _id: ObjectID(id) })
+    .then(doc => {
+      if (doc.value) {
+        console.log("Link deleted:", doc.value)
+        return doc.value;
+      } else {
+        console.log("Link not found")
+        throw "Link not found";
+      }
+    }, err => {
+      console.log("DB internal error:", err)
+      throw "DB internal error";
+    });
 }
 
 exports.getAllByUser = async function (username) {
-  let doc = await userModel.findByUser(username);
-  if (!doc) {
-    throw `User '${username}' not found 2`;
-  }
-  return db.get().collection(collectionName).find({ userId: doc._id })
-    .toArray()
+  return userModel.findByUser(username)
+    .then(doc => {
+      return db.get().collection(collectionName).find({ userId: doc._id }).toArray();
+    });
 }
