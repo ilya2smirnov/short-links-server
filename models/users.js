@@ -25,20 +25,20 @@ exports.verifyUser = async function(user, password) {
   try {
     doc = await exports.findByUser(user);
   } catch (err) {
-    throw err;
+    throw {err};
   }
   if (doc) {
     let hashObj = await crypt.genHash(password, doc.salt);
     if (hashObj.hash === doc.hash) {
       console.log("User", user, "is authenticated");
-      return doc;
+      return {doc};
     } else {
-      console.log("User:", user, "is not authenticated");
-      throw "Incorrect password";
+      console.log("Incorrect password for user", user);
+      throw {doc, err: "Incorrect password"};
     }
   }
   console.log("User:", user, "is not authenticated");
-  throw "Username not found";
+  throw {err: "Username not found"};
 }
 
 exports.add = async function(user, password) {
@@ -48,7 +48,7 @@ exports.add = async function(user, password) {
   } catch (err) { }
   if (doc) {
     console.log("User", user, "already exists");
-    throw "User " + user + " exists";
+    throw {err: "User '" + user + "' already exists"};
   }
   const hashObj = await crypt.genHash(password);
   const userObj = { user, ...hashObj };
@@ -56,10 +56,10 @@ exports.add = async function(user, password) {
     await db.get().collection(collectionName).insertOne(userObj);
   } catch (err) {
     console.log("DB internal error", err);
-    throw "Internal error";
+    throw {doc: userObj, err: "DB internal error"};
   }
   console.log("Added user:", userObj);
-  return "User added";
+  return {doc: userObj};
 }
 
 exports.deleteByUser = async function(user) {
@@ -68,16 +68,16 @@ exports.deleteByUser = async function(user) {
     doc = await exports.findByUser(user);
   } catch (err) {
     console.log("User", user, "doesn't exist");
-    throw "User '" + user + "' doesn't exist";
+    throw {err: "User '" + user + "' doesn't exist"};
   }
   console.log(doc);
   let result = await db.get().collection(collectionName).deleteOne({user});
   if (result.result.n === 1 && result.result.ok === 1) {
     console.log("User deleted:", doc);
-    return "User deleted";
+    return {doc};
   } else {
     console.log("Internal error:", result);
-    throw "Internal error";
+    throw {err:"Internal error"};
   }
 }
 

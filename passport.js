@@ -10,8 +10,8 @@ exports.useLocalPassword = function (app, urlList) {
     },
     function (username, password, done) {
       return userModel.verifyUser(username, password)
-        .then(doc => {
-          return done(null, doc);
+        .then(result => {
+          return done(null, result.doc);
         }).catch(error => {
           return done(null, false)
         })
