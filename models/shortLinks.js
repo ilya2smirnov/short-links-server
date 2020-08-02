@@ -30,22 +30,25 @@ exports.add = async function (username, fullLink, shortLink) {
     });
 }
 
-exports.deleteByLinkId = async function (id) {
+exports.deleteByLinkId = async function (id, username) {
   if (!ObjectID.isValid(id)) {
     throw "Link id is not valid: " + id;
   }
-  return db.get().collection(collectionName).findOneAndDelete({ _id: ObjectID(id) })
-    .then(doc => {
-      if (doc.value) {
-        console.log("Link deleted:", doc.value)
-        return doc.value;
-      } else {
-        console.log("Link not found")
-        throw "Link not found";
-      }
-    }, err => {
-      console.log("DB internal error:", err)
-      throw "DB internal error";
+  return userModel.findByUser(username)
+    .then(userDoc => {
+      return db.get().collection(collectionName).findOneAndDelete({_id: ObjectID(id), userId: userDoc._id})
+        .then(doc => {
+          if (doc.value) {
+            console.log("Link deleted:", doc.value)
+            return doc.value;
+          } else {
+            console.log("Link not found")
+            throw "Link not found";
+          }
+        }, err => {
+          console.log("DB internal error:", err)
+          throw "DB internal error";
+        });
     });
 }
 

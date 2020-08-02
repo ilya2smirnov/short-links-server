@@ -12,7 +12,7 @@ exports.add = async function (req, res) {
 }
 
 exports.deleteByLinkId = async function (req, res) {
-  return shortLinksDb.deleteByLinkId(req.body.linkId)
+  return shortLinksDb.deleteByLinkId(req.body.linkId, req.body.user)
     .then(doc => {
       res.send(doc);
     }).catch(err => {
